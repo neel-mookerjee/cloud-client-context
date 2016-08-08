@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cloud.context.client.config.ClientContextConfiguration,\
+  cloud.context.client.config.ClientContextFilterConfiguration,\
+  cloud.context.client.config.JwkConfiguration

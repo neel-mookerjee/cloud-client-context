@@ -1,0 +1,120 @@
+apply plugin: "java"
+apply plugin: "maven"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "spring-boot"
+apply plugin: "io.spring.dependency-management"
+
+
+ext {
+    artifact = 'cloud-client-context'
+    releaseVersion = version
+}
+
+task createPom << {
+    pom {
+        project {
+            groupId 'cloud'
+            artifactId artifact
+            version releaseVersion
+            inceptionYear '2016'
+        }
+    }.writeTo("$rootDir/repo/local/${artifact}-${version}.pom")
+}
+
+build.dependsOn createPom
+
+jar {
+    baseName = "cloud-client-context"
+}
+
+description = "Cloud Client Context"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+buildscript {
+    ext {
+        springVersion = "4.2.5.RELEASE"
+        springBootVersion = "1.3.3.RELEASE"
+        springFoxVersion = "2.4.0"
+        jose4jVersion = "0.5.0"
+        bouncyCastleVersion = "1.54"
+        logbackVersion = "1.1.3"
+        jsonPathVersion = "2.2.0"
+        gradlePluginVersion = "0.5.6.RELEASE"
+        junitVersion = "4.11"
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:${gradlePluginVersion}")
+    }
+}
+
+dependencyManagement {
+    dependencies {
+        ext {
+            springVersion = "4.2.5.RELEASE"
+            springBootVersion = "1.3.3.RELEASE"
+            springFoxVersion = "2.4.0"
+            jose4jVersion = "0.5.0"
+            bouncyCastleVersion = "1.54"
+            logbackVersion = "1.1.3"
+            jsonPathVersion = "2.2.0"
+            junitVersion = "4.11"
+        }
+        dependency("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+        dependency("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+        dependency("org.springframework.boot:spring-boot-starter-clientcontext:${springBootVersion}")
+        dependency("org.springframework.boot:spring-boot-starter-hateoas:${springBootVersion}")
+
+        dependency("org.springframework:spring-core:${springVersion}")
+        dependency("org.springframework:spring-web:${springVersion}")
+        dependency("ch.qos.logback:logback-classic:${logbackVersion}")
+
+        dependency("org.bitbucket.b_c:jose4j:${jose4jVersion}")
+        dependency("org.bouncycastle:bcpkix-jdk15on:${bouncyCastleVersion}")
+        dependency("org.bouncycastle:bcprov-jdk15on:${bouncyCastleVersion}")
+
+        dependency("io.springfox:springfox-swagger-ui:${springFoxVersion}")
+        dependency("io.springfox:springfox-swagger2:${springFoxVersion}")
+        dependency("com.jayway.jsonpath:json-path:${jsonPathVersion}")
+
+        dependency("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+        dependency("org.springframework:spring-test:${springVersion}")
+        dependency("junit:junit:${junitVersion}")
+
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}
+
+System.setProperty("org.gradle.color.failure", "RED")
+System.setProperty("org.gradle.color.progressstatus", "YELLOW")
+System.setProperty("org.gradle.color.success", "GREEN")
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+
+    compile("org.bitbucket.b_c:jose4j:${jose4jVersion}")
+    compile("org.springframework:spring-web:${springVersion}")
+    compile("ch.qos.logback:logback-classic:${logbackVersion}")
+    compile("org.bouncycastle:bcpkix-jdk15on:${bouncyCastleVersion}")
+    compile("org.bouncycastle:bcprov-jdk15on:${bouncyCastleVersion}")
+
+    compile("io.springfox:springfox-swagger-ui:${springFoxVersion}")
+    compile("io.springfox:springfox-swagger2:${springFoxVersion}")
+
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testCompile "org.springframework:spring-test:${springVersion}"
+    testCompile "junit:junit:${junitVersion}"
+}
